@@ -12,9 +12,14 @@ class NotesApp extends React.Component {
         }
 
         this.onAddNotesHandler = this.onAddNotesHandler.bind(this);
+        this.onDeleteNoteHandler = this.onDeleteNoteHandler.bind(this);
     }
 
     OnSearchHandler() {
+        
+    }
+
+    onViewHandler() {
         
     }
 
@@ -35,13 +40,18 @@ class NotesApp extends React.Component {
         })
     }
 
+    onDeleteNoteHandler(id) {
+        const notes = this.state.notes.filter((note) => note.id !== id);
+        this.setState({notes})
+    }
+
     render() {
         return (
             <>
                 <Navbar/>
                 <FormNotes addNotes={this.onAddNotesHandler}/>
-                <NotesList notes={this.state.notes.filter(note => note.archived !== true)}/>
-                <NotesList notes={this.state.notes.filter(note => note.archived === true)}/>
+                <NotesList notes={this.state.notes.filter(note => note.archived !== true)} onDeleteNotes={this.onDeleteNoteHandler} view={'Active'}/>
+                <NotesList notes={this.state.notes.filter(note => note.archived === true)} onDeleteNotes={this.onDeleteNoteHandler} view={'Arsip'}/>
             </>
             
         )
