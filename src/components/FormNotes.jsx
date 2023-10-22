@@ -20,12 +20,13 @@ class FormNotes extends React.Component{
 
     onTitleChangeEventHandler(event) {
         const limit = 50;
-        this.setState((prevState) => {
+        this.setState(() => {
             return {
                 title: event.target.value.slice(0, limit),
                 limit: ((limit - event.target.value.length) === -1) ? 0 : limit - event.target.value.length,
             }
         })
+        console.log(this.state.title)
     }
 
     onBodyChangeEventHandler(event) {

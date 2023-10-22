@@ -2,7 +2,7 @@
 import React from "react";
 import NotesListItem from "./NotesListItem";
 
-    function NotesList({ notes, view, onDeleteNotes }) {
+    function NotesList({ notes, view, onDeleteNotes, onMove }) {
         if (notes.length === 0) {
             return (
             <div className="flex flex-col w-[70%] mx-auto mt-12">
@@ -18,7 +18,7 @@ import NotesListItem from "./NotesListItem";
                         <div className="grid grid-cols-4 mt-5 gap-4">
                             {
                                 notes.map((note) => (
-                                    <NotesListItem key={note.id} {...note} onDeleteNotes={onDeleteNotes}/>
+                                    <NotesListItem key={note.id} {...note} onMove= {onMove} onDeleteNotes={onDeleteNotes}/>
                                 ))
                             }
                         </div>

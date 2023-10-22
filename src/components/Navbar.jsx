@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 
 class Navbar extends React.Component {
@@ -7,16 +8,17 @@ class Navbar extends React.Component {
             search: '',
         }
 
-        this.onChangeEventHandler = this.onChangeEventHandler.bind(this);
+        this.onSearchChangeEventHandler = this.onSearchChangeEventHandler.bind(this);
     }
 
-    onChangeEventHandler(event) {
+    onSearchChangeEventHandler(event) {
+        this.props.onSearch(event.target.value)
         this.setState (() => {
             return {
                 search: event.target.value,
             }
         })
-        console.log(this.state.search)
+        
     }
 
     render() {
@@ -27,7 +29,7 @@ class Navbar extends React.Component {
                         <h1 className="text-4xl font-bold">Notes</h1>
                     </div>
                     <div className="w-[50%] flex justify-end">
-                        <input className="border-2 border-gray-300 w-3/5 rounded-lg h-11 px-2" value={this.state.search} onChange={this.onChangeEventHandler} type="text" placeholder="search"/>
+                        <input className="border-2 border-gray-300 w-3/5 rounded-lg h-11 px-2" value={this.state.search} onChange={this.onSearchChangeEventHandler} type="text" placeholder="search"/>
                     </div>
                 </div>
             </>

@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { showFormattedDate } from "../utils";
+import ButtonMoveListItem from "./ButtonMoveListItem";
 
 
-function NotesListItem({ title, id, body, createdAt, onDeleteNotes }) {
+function NotesListItem({ title, id, body, createdAt, onDeleteNotes, archived, onMove }) {
     return (
         <>
             <div>
@@ -14,7 +15,7 @@ function NotesListItem({ title, id, body, createdAt, onDeleteNotes }) {
                 </div>
                 <div className="flex w-full h-8">
                         <button type="button" className="border border-red-500 rounded-bl-md w-1/2" onClick={() => onDeleteNotes(id)}>Delete</button>
-                        <button type="button" className="border border-yellow-400 rounded-br-md w-1/2">Arsipkan</button>
+                        <ButtonMoveListItem id={id} onMove={onMove} archived={archived}/>
                 </div>
             </div>
         </>
