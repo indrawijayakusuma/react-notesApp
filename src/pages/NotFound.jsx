@@ -1,5 +1,3 @@
-import Navbar from "../components/fragment/Navbar";
-
 const NotFound = () => {
   return (
     <>

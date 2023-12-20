@@ -9,7 +9,7 @@ import { LocaleContext } from "../context/Locale";
 
 const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const title = searchParams.get("title");
+  const [keyword, setKeyword] = useState(searchParams.get("title") ?? "");
   const [notes, setNotes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { locale } = useContext(LocaleContext);
@@ -26,24 +26,16 @@ const HomePage = () => {
   const titleSearchParamHandler = (keyword) => {
     if (keyword) {
       setSearchParams({ title: keyword });
-      setNotes(searchArchivedNotes(keyword));
+      setKeyword(keyword);
     } else {
       setSearchParams({});
-      setIsLoading(true);
+      setKeyword("");
     }
   };
 
-  function searchArchivedNotes(keyword) {
-    let searchNotes;
-    if (keyword) {
-      searchNotes = notes.filter((note) =>
-        note.title.toLowerCase().includes(keyword.toLowerCase())
-      );
-    } else {
-      searchNotes = notes;
-    }
-    return searchNotes;
-  }
+  const filteredNotes = notes.filter((note) =>
+    note.title.toLowerCase().includes(keyword.toLowerCase())
+  );
 
   const deleteHandler = (id) => {
     deleteNote(id);
@@ -59,11 +51,11 @@ const HomePage = () => {
     <ListNoteLayout
       titlePage={locale === "id" ? "Catatan aktif" : "Active Notes"}
       titleSearchParamHandler={titleSearchParamHandler}
-      activeKeyword={title}
+      activeKeyword={keyword}
       isLoading={isLoading}
     >
-      {notes.length > 0 &&
-        notes.map((note) => (
+      {filteredNotes.length > 0 &&
+        filteredNotes.map((note) => (
           <Card key={note.id}>
             <Link to={`/notes/${note.id}`}>
               <Card.Title>{note.title}</Card.Title>
@@ -84,7 +76,7 @@ const HomePage = () => {
             </Card.Footer>
           </Card>
         ))}
-      {notes.length === 0 && !isLoading && (
+      {filteredNotes.length === 0 && !isLoading && (
         <p className="text-center col-span-3">
           {locale === "id" ? "Tidak ada catatan" : "No notes"}
         </p>

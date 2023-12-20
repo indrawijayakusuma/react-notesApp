@@ -13,7 +13,7 @@ import { LocaleContext } from "../context/Locale";
 
 const ArcivesPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const title = searchParams.get("title");
+  const [keyword, setKeyword] = useState(searchParams.get("title") ?? "");
   const [notes, setNotes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { locale } = useContext(LocaleContext);
@@ -28,26 +28,13 @@ const ArcivesPage = () => {
   }, [isLoading]);
 
   const titleSearchParamHandler = (keyword) => {
-    if (keyword) {
-      setSearchParams({ title: keyword });
-      setNotes(searchUnarchivedNotes(keyword));
-    } else {
-      setSearchParams({});
-      setIsLoading(true);
-    }
+    setKeyword(keyword);
+    setSearchParams({ title: keyword });
   };
 
-  function searchUnarchivedNotes(keyword) {
-    let searchNotes;
-    if (keyword) {
-      searchNotes = notes.filter((note) =>
-        note.title.toLowerCase().includes(keyword.toLowerCase())
-      );
-    } else {
-      searchNotes = notes;
-    }
-    return searchNotes;
-  }
+  const filteredNotes = notes.filter((note) =>
+    note.title.toLowerCase().includes(keyword.toLowerCase())
+  );
 
   const deleteHandler = (id) => {
     deleteNote(id);
@@ -63,11 +50,11 @@ const ArcivesPage = () => {
     <ListNoteLayout
       titlePage={locale === "id" ? "Catatan Terarsip" : "Archived Notes"}
       titleSearchParamHandler={titleSearchParamHandler}
-      activeKeyword={title}
+      activeKeyword={keyword}
       isLoading={isLoading}
     >
-      {notes.length > 0 &&
-        notes.map((note) => (
+      {filteredNotes.length > 0 &&
+        filteredNotes.map((note) => (
           <Card key={note.id}>
             <Link to={`/notes/${note.id}`}>
               <Card.Title>{note.title}</Card.Title>
@@ -88,7 +75,7 @@ const ArcivesPage = () => {
             </Card.Footer>
           </Card>
         ))}
-      {notes.length === 0 && !isLoading && (
+      {filteredNotes.length === 0 && !isLoading && (
         <p className="text-center col-span-3">
           {locale === "id" ? "Tidak ada catatan terarsip" : "No archived notes"}
         </p>

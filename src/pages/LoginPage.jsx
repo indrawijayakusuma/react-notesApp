@@ -14,11 +14,8 @@ const schema = object({
 });
 
 const LoginPage = ({ loginHandler }) => {
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-  });
-  const [email, setEmail] = useInput("");
+  const [email, onEmailChange] = useInput("");
+  const [password, onPasswordChange] = useInput("");
   const { locale } = useContext(LocaleContext);
 
   useEffect(() => {
@@ -27,6 +24,7 @@ const LoginPage = ({ loginHandler }) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    const user = { email, password };
     try {
       await schema.validate(user);
       const { error, data } = await login(user);
@@ -39,7 +37,7 @@ const LoginPage = ({ loginHandler }) => {
   };
 
   return (
-    <div className="animate-fade delay-[10000ms]">
+    <div className="animate-fade">
       <div className="w-[40%] mx-auto mt-20">
         <h2 className="text-2xl font-semibold">
           {locale === "id" ? "Masuk" : "Login"}
@@ -49,16 +47,16 @@ const LoginPage = ({ loginHandler }) => {
             autoComplete="on"
             type="email"
             placeholder="Email"
-            value={user.email}
-            onChange={(e) => setUser({ ...user, email: e.target.value })}
+            value={email}
+            onChange={onEmailChange}
             className="border border-gray-300 bg-transparent py-3 pl-3 rounded-lg"
           />
           <input
             autoComplete="new-password"
             type="password"
             placeholder="password"
-            value={user.password}
-            onChange={(e) => setUser({ ...user, password: e.target.value })}
+            value={password}
+            onChange={onPasswordChange}
             className="border border-gray-300 bg-transparent py-3 pl-3 rounded-lg"
           />
           <Button>{locale === "id" ? "Masuk" : "Login"}</Button>

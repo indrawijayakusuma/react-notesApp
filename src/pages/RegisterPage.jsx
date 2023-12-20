@@ -1,9 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { register } from "../utils/network-data";
 import Button from "../components/element/Button";
 import { object, string, ref } from "yup";
 import { LocaleContext } from "../context/Locale";
+import { useInput } from "../hooks/useInput";
 
 const schema = object({
   name: string().required(),
@@ -17,12 +18,10 @@ const schema = object({
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [name, onNameChange] = useInput("");
+  const [email, onEmailChange] = useInput("");
+  const [password, onPasswordChange] = useInput("");
+  const [confirmPassword, onConfirmPasswordChange] = useInput("");
   const { locale } = useContext(LocaleContext);
 
   useEffect(() => {
@@ -31,6 +30,7 @@ const RegisterPage = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    const user = { name, email, password, confirmPassword };
     try {
       await schema.validate(user);
       const { error } = await register(user);
@@ -44,7 +44,7 @@ const RegisterPage = () => {
 
   return (
     <>
-      <div className="w-[40%] mx-auto mt-20">
+      <div className="w-[40%] mx-auto mt-20 animate-fade">
         <h2 className="text-2xl font-semibold">
           {locale === "id" ? "Daftar" : "Register"}
         </h2>
@@ -52,34 +52,32 @@ const RegisterPage = () => {
           <input
             type="text"
             placeholder="name"
-            value={user.name}
-            onChange={(e) => setUser({ ...user, name: e.target.value })}
+            value={name}
+            onChange={onNameChange}
             className="border border-gray-300 bg-transparent py-3 pl-3 rounded-lg"
           />
           <input
             autoComplete="on"
             type="email"
             placeholder="Email"
-            value={user.email}
-            onChange={(e) => setUser({ ...user, email: e.target.value })}
+            value={email}
+            onChange={onEmailChange}
             className="border border-gray-300 bg-transparent py-3 pl-3 rounded-lg"
           />
           <input
             autoComplete="new-password"
             type="password"
             placeholder="password"
-            value={user.password}
-            onChange={(e) => setUser({ ...user, password: e.target.value })}
+            value={password}
+            onChange={onPasswordChange}
             className="border border-gray-300 bg-transparent py-3 pl-3 rounded-lg"
           />
           <input
             autoComplete="new-password"
             type="password"
             placeholder="confirm password"
-            value={user.confirmPassword}
-            onChange={(e) =>
-              setUser({ ...user, confirmPassword: e.target.value })
-            }
+            value={confirmPassword}
+            onChange={onConfirmPasswordChange}
             className="border border-gray-300 bg-transparent py-3 pl-3 rounded-lg"
           />
           <Button>{locale === "id" ? "Daftar" : "Register"}</Button>
